@@ -39,6 +39,7 @@ class CityForecastView extends React.Component {
             })
             .then(json => {
                 if (200 === parseInt(json.cod, 10)) {
+                    localStorage.setItem('lastViewedCity', json.city.name);
                     const todaysEndOfDay = moment.utc().endOf('day').unix();
                     json.list = json.list.filter(hourlyForecast => {
                         const hourlyForecastDate = moment.unix(hourlyForecast.dt).utc();
