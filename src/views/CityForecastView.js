@@ -1,6 +1,7 @@
 import React from 'react'
 import TodaysWeather from '../components/TodaysWeather'
 import DataAdapter from '../utils/DataAdapter'
+import axios from 'axios'
 
 class CityForecastView extends React.Component {
 
@@ -34,12 +35,8 @@ class CityForecastView extends React.Component {
         } else if (this.state.cityName) {
             apiRoute = 'http://api.openweathermap.org/data/2.5/forecast?q=' + this.state.cityName + '&appid=ac4ac652654d00e02b9cbe592d3848ce';
         }
-        fetch(apiRoute)
-            .then(response => {
-                return response.json();
-            })
-            .then(json => {
-                const adaptedJson = DataAdapter.adaptJSON(json);
+        axios.get(apiRoute).then(response => {
+                const adaptedJson = DataAdapter.adaptJSON(response.data);
                 this.setState(adaptedJson);
                 if (adaptedJson.requestedCity) {
                     localStorage.setItem('lastViewedCity', adaptedJson.requestedCity.name);
