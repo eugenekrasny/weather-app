@@ -30,9 +30,9 @@ class CityForecastView extends React.Component {
         let apiRoute = null;
         if (this.state.coords) {
             const coords = this.state.coords;
-            apiRoute = '/forecast?lat=' + coords.lat + '&lon=' + coords.lon + '&appid=ac4ac652654d00e02b9cbe592d3848ce';
+            apiRoute = 'http://api.openweathermap.org/data/2.5/forecast?lat=' + coords.lat + '&lon=' + coords.lon + '&appid=ac4ac652654d00e02b9cbe592d3848ce';
         } else if (this.state.cityName) {
-            apiRoute = '/forecast?q=' + this.state.cityName + '&appid=ac4ac652654d00e02b9cbe592d3848ce';
+            apiRoute = 'http://api.openweathermap.org/data/2.5/forecast?q=' + this.state.cityName + '&appid=ac4ac652654d00e02b9cbe592d3848ce';
         }
         fetch(apiRoute)
             .then(response => {
