@@ -78,7 +78,7 @@ function filteredDailyForecast(json) {
 function extendedDailyForecastWithTodaysForecastIfNeeded(dailyForecast, todaysWeather) {
     const firstEntryInDailyForecast = moment.unix(dailyForecast[0].dt).utc(),
         firstEntryInSlicedForecast = moment.unix(todaysWeather.dt).utc();
-    if (0 !== firstEntryInDailyForecast.diff(firstEntryInSlicedForecast, 'days')) {
+    if (firstEntryInSlicedForecast.date() !== firstEntryInDailyForecast.date()) {
         const modifiedDailyForecast = dailyForecast.slice();
         modifiedDailyForecast.splice(0, 0, todaysWeather);
         return modifiedDailyForecast;
@@ -95,10 +95,10 @@ function adaptedTemperatureValues(forecast) {
 }
 
 function convertedTemperatureToCelsius(tempInKelvin) {
-    return Math.round(tempInKelvin - 273.5) + ' \u2103';
+    return Math.round(tempInKelvin - 273.5) + '\u2103';
 }
 function convertedTemperatureToFahrenheit(tempInKelvin) {
-    return Math.round(tempInKelvin * 9/5.0 - 459.67) + ' \u2109';
+    return Math.round(tempInKelvin * 9/5.0 - 459.67) + '\u2109';
 }
 
 function adaptedCurrentWeather(forecast) {
@@ -110,7 +110,9 @@ function adaptedCurrentWeather(forecast) {
 
     if (forecast.weather && forecast.weather.length > 0) {
         const weatherObject = forecast.weather[0];
-        adaptedWeather.conditionsDescription = weatherObject.description;
+        let conditionDescription = weatherObject.description;
+        conditionDescription = conditionDescription.charAt(0).toUpperCase() + conditionDescription.slice(1)
+        adaptedWeather.conditionsDescription = conditionDescription;
         adaptedWeather.conditionsIcon = adaptedIconClass(weatherObject.icon);
     }
 
@@ -157,7 +159,7 @@ function adaptedDailyForecast(dailyForecast) {
 }
 
 function adaptedIconClass(iconCode, isNeutral) {
-    let iconClass = 'wi wi';
+    let iconClass = 'wi';
     if (!isNeutral) {
         if (-1 !== iconCode.search('d')) {
             iconClass += '-day'

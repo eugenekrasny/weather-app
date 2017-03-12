@@ -1,0 +1,83 @@
+.city-forecast {
+    color: rgb(78, 102, 112);
+}
+
+.city-forecast .header {
+    padding: 25px 30px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.city-forecast .header .button-back {
+    color: rgb(78, 102, 112);
+    line-height: 35px;
+    margin-right: 15px;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+.city-forecast .current-weather {
+    margin: 0 25px;
+}
+
+.city-forecast .current-weather .formatted-date {
+    font-size: 24px;
+    font-weight: 300;
+}
+
+.city-forecast .current-weather .weather-conditions {
+    margin: 10px 0;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.city-forecast .current-weather .weather-description {
+    color: rgb(227, 150, 129);
+    display: inline-block;
+    font-size: 80px;
+    line-height: 150px;
+}
+
+.city-forecast .current-weather .weather-icon {
+    font-size: 110px;
+    color: rgb(227, 150, 129);
+    margin: 0 25px;
+}
+
+.city-forecast .current-weather .weather-sliced {
+    margin: 0 30px;
+    display: inline-block;
+    vertical-align: top;
+    color: rgb(227, 150, 129);
+}
+
+.city-forecast .current-weather .weather-sliced .slice-container {
+    margin: 10px 0;
+}
+
+.city-forecast .current-weather .weather-sliced .slice-container .slice-caption {
+    width: 80px;
+    display: inline-block;
+}
+
+.city-forecast .current-weather .weather-sliced .slice-container .slice-temperature {
+    display: inline-block;
+}
+
+.city-forecast .daily-forecast-container {
+    margin: 10px 0;
+}
+
+.city-forecast .daily-forecast-container .daily-forecast-item {
+    display: inline-block;
+    text-align: center;
+    margin: auto 20px;
+    font-size: 12px;
+}
+
+.city-forecast .daily-forecast-container .daily-forecast-item .weather-icon {
+    color: rgb(77,102,114);
+    font-size: 50px;
+    vertical-align: top;
+    margin: 5px 0 25px 0;
+}

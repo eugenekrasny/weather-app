@@ -2,6 +2,7 @@ import React from 'react'
 import TodaysWeather from '../components/TodaysWeather'
 import DataAdapter from '../utils/DataAdapter'
 import axios from 'axios'
+import '../css/cityForecast.css'
 
 class CityForecastView extends React.Component {
 
@@ -72,8 +73,10 @@ class CityForecastView extends React.Component {
             todaysWeatherComponent = <TodaysWeather current={currentWeather} sliced={slicedTodaysForecast} daily={dailyForecast} />;
         }
 
-        return <div>
-            <div><button type="button" onClick={this.navigateToCitySelector}>Back</button> <span>{cityName}</span></div>
+        return <div className="city-forecast">
+            <div className="header">
+                <i className="button-back material-icons md-36" onClick={this.navigateToCitySelector}>&#xE5C4;</i> <span>{cityName}</span>
+            </div>
             {todaysWeatherComponent}
         </div>
     }

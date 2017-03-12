@@ -1,7 +1,6 @@
 import React from 'react';
 import moment from 'moment';
 import '../libs/weather-icons/css/weather-icons.min.css'
-import '../css/dailyForecast.css'
 
 class TodaysWeather extends React.Component {
     constructor(props) {
@@ -18,17 +17,12 @@ class TodaysWeather extends React.Component {
         }
 
         let currentWeather = null,
-            hourlyDetails = null,
             dailyForecast = null;
 
         const currentWeatherObject = this.state.currentWeather;
-        if (currentWeatherObject) {
-            currentWeather = <CurrentWeather weather={currentWeatherObject} />;
-        }
-
         const slicedForecast = this.state.slicedForecast;
-        if (slicedForecast) {
-            hourlyDetails = <HourlyDetails of={slicedForecast} />;
+        if (currentWeatherObject) {
+            currentWeather = <CurrentWeather weather={currentWeatherObject} slicedForecast={slicedForecast} />;
         }
 
         const dailyForecastObject = this.state.dailyForecast;
@@ -39,7 +33,6 @@ class TodaysWeather extends React.Component {
         return (
             <div>
                 {currentWeather}
-                {hourlyDetails}
                 {dailyForecast}
             </div>
         );
@@ -49,16 +42,31 @@ class TodaysWeather extends React.Component {
 export default TodaysWeather;
 
 function CurrentWeather(props) {
-    const weather = props.weather;
+    const weather = props.weather,
+        slicedForecast = props.slicedForecast;
     if (!weather) {
         return;
     }
 
+    let slicedForecastComponent = null;
+    if (slicedForecast) {
+        const slicedItems = slicedForecast.reverse().map((wrappedForecast) => {
+            return <div className="slice-container" key={wrappedForecast.caption}>
+                <div className="slice-caption">{wrappedForecast.caption}</div>
+                <div className="slice-temperature">{wrappedForecast.forecast.temp.metric}</div>
+            </div>
+        });
+        slicedForecastComponent = <div className="weather-sliced">{slicedItems}</div>
+    }
+
     return (
-        <div>
-            <div><FormattedDate of={weather.date} /></div>
-            <div>{weather.conditionsDescription}</div>
-            <div>{weather.temp.metric}  <i className={weather.conditionsIcon} /></div>
+        <div className="current-weather">
+            <FormattedDate of={weather.date} />
+            <div className="weather-conditions">{weather.conditionsDescription}</div>
+            <div>
+                <div className="weather-description">{weather.temp.metric}  <i className={"weather-icon wi "+ weather.conditionsIcon} /></div>
+                {slicedForecastComponent}
+            </div>
         </div>
     );
 }
@@ -75,22 +83,7 @@ function FormattedDate(props) {
     }
 
     return (
-        <span>{moment.unix(props.of - 1).utc().format(format)}</span>
-    );
-}
-
-function HourlyDetails(props) {
-    const slicedForecast = props.of;
-    if (!slicedForecast) {
-        return;
-    }
-
-    const hourlyItems = slicedForecast.reverse().map((wrappedForecast) => {
-        return <div key={wrappedForecast.caption}>{wrappedForecast.forecast.dt_txt} - {wrappedForecast.caption} {wrappedForecast.forecast.temp.metric}</div>
-    });
-
-    return (
-        <div>{hourlyItems}</div>
+        <div className="formatted-date">{moment.unix(props.of - 1).utc().format(format)}</div>
     );
 }
 
@@ -103,7 +96,7 @@ function DailyForecast(props) {
     const dailyItems = forecast.map(forecastEntry => {
         return <div key={forecastEntry.date} className="daily-forecast-item">
             <FormattedDate of={forecastEntry.date} format="short" /><br />
-            <i className={forecastEntry.conditionsIcon} /><br/>
+            <i className={"weather-icon wi wi-fw " + forecastEntry.conditionsIcon} /><br/>
             <span>{forecastEntry.temp.metric}</span>
         </div>;
     });
