@@ -15,7 +15,7 @@ ReactDOM.render((
     ),
     document.getElementById('root'),
     () => {
-        var lastViewedCity = localStorage.getItem('lastViewedCity');
+        const lastViewedCity = localStorage.getItem('lastViewedCity');
         if (lastViewedCity) {
             window.location.hash = '#/' + lastViewedCity;
         }

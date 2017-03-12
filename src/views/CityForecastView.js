@@ -1,5 +1,6 @@
 import React from 'react'
-import moment from 'moment'
+import TodaysWeather from '../components/TodaysWeather'
+import DataAdapter from '../utils/DataAdapter'
 
 class CityForecastView extends React.Component {
 
@@ -38,26 +39,12 @@ class CityForecastView extends React.Component {
                 return response.json();
             })
             .then(json => {
-                if (200 === parseInt(json.cod, 10)) {
-                    localStorage.setItem('lastViewedCity', json.city.name);
-                    const todaysEndOfDay = moment.utc().endOf('day').unix();
-                    json.list = json.list.filter(hourlyForecast => {
-                        const hourlyForecastDate = moment.unix(hourlyForecast.dt).utc();
-                        const hourlyForecastStartOfDayDate = moment.unix(hourlyForecast.dt).utc().startOf('day');
-                        const diffInHours = hourlyForecastDate.diff(hourlyForecastStartOfDayDate, 'hours');
-
-                        return hourlyForecast.dt < todaysEndOfDay || (hourlyForecast.dt > todaysEndOfDay && 12 === diffInHours);
-                    });
-                    json.cnt = json.list.length;
-                    this.setState({
-                        forecast: json
-                    });
-                } else {
-                    this.setState({
-                        forecastError: json
-                    });
+                const adaptedJson = DataAdapter.adaptJSON(json);
+                this.setState(adaptedJson);
+                if (adaptedJson.requestedCity) {
+                    localStorage.setItem('lastViewedCity', adaptedJson.requestedCity.name);
                 }
-                console.log(json);
+                console.log(adaptedJson);
             })
             .catch(error => {
                 console.log(error);
@@ -65,15 +52,32 @@ class CityForecastView extends React.Component {
     }
 
     render() {
-        let cityName = null;
-        if (this.state && this.state.forecast) {
-            const forecast = this.state.forecast;
-            cityName = forecast.city.name;
-        } else {
-            cityName = this.state.cityName;
+        const state = this.state;
+        if (!state) {
+            return null;
         }
+
+        let cityName = null,
+            todaysWeatherComponent = null;
+
+        const requestedCity = state.requestedCity,
+            currentWeather = state.currentWeather,
+            slicedTodaysForecast = state.slicedTodaysForecast,
+            dailyForecast = state.dailyForecast;
+
+        if (requestedCity) {
+            cityName = requestedCity.name;
+        } else {
+            cityName = state.cityName;
+        }
+
+        if (currentWeather && slicedTodaysForecast && dailyForecast) {
+            todaysWeatherComponent = <TodaysWeather current={currentWeather} sliced={slicedTodaysForecast} daily={dailyForecast} />;
+        }
+
         return <div>
-            <button type="button" onClick={this.navigateToCitySelector}>Back</button> <span>{cityName}</span>
+            <div><button type="button" onClick={this.navigateToCitySelector}>Back</button> <span>{cityName}</span></div>
+            {todaysWeatherComponent}
         </div>
     }
 }

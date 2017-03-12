@@ -1,0 +1,13 @@
+.daily-forecast-container {
+    margin: 10px 0;
+}
+
+.daily-forecast-item {
+    display: inline-block;
+    text-align: center;
+    margin: 0 20px;
+}
+
+.daily-forecast-item > * {
+    margin: 10px 0;
+}
