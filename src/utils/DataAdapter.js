@@ -12,6 +12,7 @@ class DataAdapter {
         let dailyForecast = filteredDailyForecast(json.list);
         dailyForecast = extendedDailyForecastWithTodaysForecastIfNeeded(dailyForecast,
             slicedForecast[slicedForecast.length - 1]);
+        dailyForecast = dailyForecastWithMockObjectsIfNeeded(dailyForecast);
 
         return {
             requestedCity: json.city,
@@ -79,11 +80,30 @@ function extendedDailyForecastWithTodaysForecastIfNeeded(dailyForecast, todaysWe
     const firstEntryInDailyForecast = moment.unix(dailyForecast[0].dt).utc(),
         firstEntryInSlicedForecast = moment.unix(todaysWeather.dt - 1).utc();
     if (firstEntryInSlicedForecast.date() !== firstEntryInDailyForecast.date()) {
-        const modifiedDailyForecast = dailyForecast.slice();
+        const modifiedDailyForecast = dailyForecast.concat();
         modifiedDailyForecast.splice(0, 0, todaysWeather);
         return modifiedDailyForecast;
     }
     return dailyForecast;
+}
+
+function dailyForecastWithMockObjectsIfNeeded(dailyForecast) {
+    const numberOfDaysNeededInForecast = 7,
+        daysLeftToAdd = numberOfDaysNeededInForecast - dailyForecast.length;
+    if (0 === daysLeftToAdd) {
+        return dailyForecast;
+    }
+
+    const modifiedForecast = dailyForecast.concat(),
+        lastDayInForecast = dailyForecast[dailyForecast.length - 1],
+        secondsInDay = 86400;
+    for (let i = 1; i <= daysLeftToAdd; i++) {
+        const clonedForecast = Object.assign({}, lastDayInForecast);
+        clonedForecast.dt += i * secondsInDay;
+        modifiedForecast.push(clonedForecast);
+    }
+
+    return modifiedForecast;
 }
 
 function adaptedTemperatureValues(forecast) {
@@ -104,19 +124,24 @@ function convertedTemperatureToFahrenheit(tempInKelvin) {
 function adaptedCurrentWeather(forecast) {
     const adaptedWeather = {
         temp: adaptedTemperatureValues(forecast),
-        date: forecast.dt,
-        dt_txt: forecast.dt_txt
+        date: forecast.dt
     };
 
     if (forecast.weather && forecast.weather.length > 0) {
         const weatherObject = forecast.weather[0];
         let conditionDescription = weatherObject.description;
-        conditionDescription = conditionDescription.charAt(0).toUpperCase() + conditionDescription.slice(1);
-        adaptedWeather.conditionsDescription = conditionDescription;
+        adaptedWeather.conditionsDescription = capitalizedString(weatherObject.description);
         adaptedWeather.conditionsIcon = adaptedIconClass(weatherObject.icon);
     }
 
     return adaptedWeather;
+}
+
+function capitalizedString(string) {
+    let capitalizedString = string;
+    capitalizedString = capitalizedString.charAt(0).toUpperCase() + capitalizedString.slice(1);
+
+    return capitalizedString;
 }
 
 const kDaySliceNames = {
@@ -131,8 +156,7 @@ function adaptedSlicedTodaysForecast(slicedTodaysForecast) {
         newArray.push({
             forecast: {
                 temp: adaptedTemperatureValues(forecast),
-                date: forecast.dt,
-                dt_txt: forecast.dt_txt
+                date: forecast.dt
             },
             caption: kDaySliceNames[index]
         });
@@ -143,16 +167,18 @@ function adaptedSlicedTodaysForecast(slicedTodaysForecast) {
 function adaptedDailyForecast(dailyForecast) {
     const adaptedDailyForecast = [];
     dailyForecast.forEach(forecast => {
-        let conditionsIcon = null;
+        let conditionsIcon = null,
+            conditionsDescription = null;
         if (forecast.weather && forecast.weather.length > 0) {
-            console.log(forecast.weather);
-            conditionsIcon = adaptedIconClass(forecast.weather[0].icon, true);
+            const weather = forecast.weather[0];
+            conditionsIcon = adaptedIconClass(weather.icon, true);
+            conditionsDescription = capitalizedString(weather.description);
         }
         adaptedDailyForecast.push({
             temp: adaptedTemperatureValues(forecast),
             conditionsIcon: conditionsIcon,
-            date: forecast.dt,
-            dt_txt: forecast.dt_txt
+            conditionsDescription: conditionsDescription,
+            date: forecast.dt
         });
     });
 

@@ -91,7 +91,7 @@ function DailyForecast(props) {
     const dailyItems = forecast.map(forecastEntry => {
         return <div key={forecastEntry.date} className="daily-forecast-item">
             <FormattedDate of={forecastEntry.date} format="short" /><br />
-            <i className={"weather-icon wi wi-fw " + forecastEntry.conditionsIcon} /><br/>
+            <i title={forecastEntry.conditionsDescription} className={"weather-icon wi wi-fw " + forecastEntry.conditionsIcon} /><br/>
             <span>{forecastEntry.temp[units]}</span>
         </div>;
     });
