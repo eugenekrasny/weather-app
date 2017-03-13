@@ -129,7 +129,6 @@ function adaptedCurrentWeather(forecast) {
 
     if (forecast.weather && forecast.weather.length > 0) {
         const weatherObject = forecast.weather[0];
-        let conditionDescription = weatherObject.description;
         adaptedWeather.conditionsDescription = capitalizedString(weatherObject.description);
         adaptedWeather.conditionsIcon = adaptedIconClass(weatherObject.icon);
     }
