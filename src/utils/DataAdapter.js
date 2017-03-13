@@ -1,25 +1,26 @@
 import moment from 'moment'
 
-class DataAdapter {}
+class DataAdapter {
 
-DataAdapter.adaptJSON = (json) => {
-    if (200 !== parseInt(json.cod, 10)) {
-        return { forecastError: json };
+    static adaptJSON(json) {
+        if (!json.list || 0 >= json.list.length) {
+            return {forecastError: json};
+        }
+
+        const currentWeather = json.list[0],
+            slicedForecast = filteredSlicedForecast(json.list, currentWeather);
+        let dailyForecast = filteredDailyForecast(json.list);
+        dailyForecast = extendedDailyForecastWithTodaysForecastIfNeeded(dailyForecast,
+            slicedForecast[slicedForecast.length - 1]);
+
+        return {
+            requestedCity: json.city,
+            currentWeather: adaptedCurrentWeather(currentWeather),
+            slicedTodaysForecast: adaptedSlicedTodaysForecast(slicedForecast),
+            dailyForecast: adaptedDailyForecast(dailyForecast)
+        };
     }
-
-    const currentWeather = json.list[0],
-        slicedForecast = filteredSlicedForecast(json.list, currentWeather);
-    let dailyForecast = filteredDailyForecast(json.list);
-    dailyForecast = extendedDailyForecastWithTodaysForecastIfNeeded(dailyForecast,
-        slicedForecast[slicedForecast.length - 1]);
-
-    return {
-        requestedCity: json.city,
-        currentWeather: adaptedCurrentWeather(currentWeather),
-        slicedTodaysForecast: adaptedSlicedTodaysForecast(slicedForecast),
-        dailyForecast: adaptedDailyForecast(dailyForecast)
-    };
-};
+}
 
 export default DataAdapter;
 
@@ -110,7 +111,7 @@ function adaptedCurrentWeather(forecast) {
     if (forecast.weather && forecast.weather.length > 0) {
         const weatherObject = forecast.weather[0];
         let conditionDescription = weatherObject.description;
-        conditionDescription = conditionDescription.charAt(0).toUpperCase() + conditionDescription.slice(1)
+        conditionDescription = conditionDescription.charAt(0).toUpperCase() + conditionDescription.slice(1);
         adaptedWeather.conditionsDescription = conditionDescription;
         adaptedWeather.conditionsIcon = adaptedIconClass(weatherObject.icon);
     }
@@ -144,6 +145,7 @@ function adaptedDailyForecast(dailyForecast) {
     dailyForecast.forEach(forecast => {
         let conditionsIcon = null;
         if (forecast.weather && forecast.weather.length > 0) {
+            console.log(forecast.weather);
             conditionsIcon = adaptedIconClass(forecast.weather[0].icon, true);
         }
         adaptedDailyForecast.push({

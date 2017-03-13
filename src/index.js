@@ -10,7 +10,6 @@ ReactDOM.render((
         <Router history={hashHistory}>
             <Route path="/" component={CitySelectionView} />
             <Route path="/:cityName" component={CityForecastView} />
-            <Route path="/:lat/:lon" component={CityForecastView} />
         </Router>
     ),
     document.getElementById('root'),

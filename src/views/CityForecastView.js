@@ -1,7 +1,6 @@
 import React from 'react'
 import TodaysWeather from '../components/TodaysWeather'
-import DataAdapter from '../utils/DataAdapter'
-import axios from 'axios'
+import DataLoader from '../utils/DataLoader'
 import '../css/switch.css'
 import '../css/cityForecast.css'
 
@@ -9,17 +8,9 @@ class CityForecastView extends React.Component {
 
     constructor(props) {
         super(props);
-        const params = props.params;
-        let coords = null;
-        if (params.lon && params.lat) {
-            coords = {
-                lon: params.lon,
-                lat: params.lat
-            };
-        }
         this.state = {
-            cityName: params.cityName,
-            coords: coords,
+            weather: DataLoader.getLastLoadedData(),
+            cityName: props.params.cityName,
             units: localStorage.getItem('weatherAppUnits') || 'imperial'
         };
         this.navigateToCitySelector = this.navigateToCitySelector.bind(this);
@@ -41,40 +32,34 @@ class CityForecastView extends React.Component {
     }
 
     componentWillMount() {
-        let apiRoute = null;
-        if (this.state.coords) {
-            const coords = this.state.coords;
-            apiRoute = 'http://api.openweathermap.org/data/2.5/forecast?lat=' + coords.lat + '&lon=' + coords.lon + '&appid=ac4ac652654d00e02b9cbe592d3848ce';
-        } else if (this.state.cityName) {
-            apiRoute = 'http://api.openweathermap.org/data/2.5/forecast?q=' + this.state.cityName + '&appid=ac4ac652654d00e02b9cbe592d3848ce';
-        }
-        axios.get(apiRoute)
-            .then(response => {
-                const adaptedJson = DataAdapter.adaptJSON(response.data);
-                this.setState(adaptedJson);
-                if (adaptedJson.requestedCity) {
-                    localStorage.setItem('lastViewedCity', adaptedJson.requestedCity.name);
+        if (!this.state.weather) {
+            DataLoader.loadWeatherDataByCityName(this.state.cityName, (error) => {
+                if (error) {
+                    this.context.router.push('/');
                 }
-                console.log(adaptedJson);
-            })
-            .catch(error => {
-                console.log(error);
-            })
+
+                this.setState({
+                    weather: DataLoader.getLastLoadedData()
+                })
+            });
+        }
     }
 
     render() {
         const state = this.state;
-        if (!state) {
+        if (!state || !state.weather) {
             return null;
         }
+
+        const weather = state.weather;
 
         let cityName = null,
             todaysWeatherComponent = null;
 
-        const requestedCity = state.requestedCity,
-            currentWeather = state.currentWeather,
-            slicedTodaysForecast = state.slicedTodaysForecast,
-            dailyForecast = state.dailyForecast,
+        const requestedCity = weather.requestedCity,
+            currentWeather = weather.currentWeather,
+            slicedTodaysForecast = weather.slicedTodaysForecast,
+            dailyForecast = weather.dailyForecast,
             units = state.units;
 
         if (requestedCity) {

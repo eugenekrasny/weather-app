@@ -1,0 +1,47 @@
+.city-selection {
+    margin: auto;
+    text-align: center;
+    padding: 40px 0;
+    color: rgb(74,96,109);
+}
+
+.city-selection .city-search-container {
+    border-bottom: 1px solid rgb(74,96,109);
+    display: inline-block;
+    margin: 20px 0 10px 0;
+}
+.city-selection .city-search-container .city-search-button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    outline: none;
+    padding-right: 0;
+}
+
+.city-selection .city-search-container .city-search-field {
+    border: none;
+    text-align: center;
+    font-size: 30px;
+    outline: none;
+    padding-left: 34px;
+}
+
+.city-selection .location-selector span {
+    display: block;
+    margin: 15px 0;
+}
+
+.city-selection .location-selector .or {
+    font-size: 14px;
+}
+
+.city-selection .location-selector a {
+    color: rgb(74,96,109);
+    border-bottom: 1px dotted rgb(74,96,109);
+    text-decoration: none;
+}
+
+.city-selection .error-message {
+    color: red;
+    margin-top: 20px;
+}
