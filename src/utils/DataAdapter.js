@@ -26,8 +26,7 @@ export default DataAdapter;
 const kDaySliceOffsets = {
         morning: 6,
         day: 12,
-        evening: 18,
-        night: 24
+        evening: 18
     },
     kDaySliceIndexes = {
         night: 0,
@@ -44,7 +43,7 @@ function filteredSlicedForecast(json, currentWeather) {
         return forecastEntry.dt <= tomorrowsStartOfDay;
     }).reverse().forEach((forecastEntry, index) => {
         const hoursDiff = moment.unix(forecastEntry.dt).diff(startDate, 'hours');
-        if (kDaySliceOffsets.night <= hoursDiff) {
+        if (0 === index) {
             return slicedForecast[kDaySliceIndexes.night] = forecastEntry;
         }
 
@@ -77,7 +76,7 @@ function filteredDailyForecast(json) {
 
 function extendedDailyForecastWithTodaysForecastIfNeeded(dailyForecast, todaysWeather) {
     const firstEntryInDailyForecast = moment.unix(dailyForecast[0].dt).utc(),
-        firstEntryInSlicedForecast = moment.unix(todaysWeather.dt).utc();
+        firstEntryInSlicedForecast = moment.unix(todaysWeather.dt - 1).utc();
     if (firstEntryInSlicedForecast.date() !== firstEntryInDailyForecast.date()) {
         const modifiedDailyForecast = dailyForecast.slice();
         modifiedDailyForecast.splice(0, 0, todaysWeather);

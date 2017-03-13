@@ -6,6 +6,7 @@
     padding: 25px 30px;
     font-size: 28px;
     font-weight: bold;
+    display: inline-block;
 }
 
 .city-forecast .header .button-back {
