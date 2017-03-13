@@ -136,7 +136,7 @@ function adaptedSlicedTodaysForecast(slicedTodaysForecast) {
             caption: kDaySliceNames[index]
         });
         return newArray;
-    }, []);
+    }, []).reverse();
 }
 
 function adaptedDailyForecast(dailyForecast) {

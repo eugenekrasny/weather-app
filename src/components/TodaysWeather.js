@@ -44,7 +44,7 @@ function CurrentWeather(props) {
 
     let slicedForecastComponent = null;
     if (slicedForecast) {
-        const slicedItems = slicedForecast.reverse().map((wrappedForecast) => {
+        const slicedItems = slicedForecast.map((wrappedForecast) => {
             return <div className="slice-container" key={wrappedForecast.caption}>
                 <div className="slice-caption">{wrappedForecast.caption}</div>
                 <div className="slice-temperature">{wrappedForecast.forecast.temp[units]}</div>
