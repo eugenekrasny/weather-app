@@ -67,12 +67,13 @@
 
 .city-forecast .daily-forecast-container {
     margin: 10px 0;
+    display: flex;
+    justify-content: space-around;
 }
 
 .city-forecast .daily-forecast-container .daily-forecast-item {
     display: inline-block;
     text-align: center;
-    margin: auto 20px;
     font-size: 12px;
 }
 

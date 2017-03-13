@@ -12,14 +12,10 @@ body {
 
 #root {
     position: relative;
-    top: 15%;
-    width: 70%;
-    height: 70%;
+    top: calc(50% - 466px/2);
+    width: 840px;
+    height: 466px;
     margin: auto;
-    max-width: 1176px;
-    min-width: 896px;
-    max-height: 680px;
-    min-height: 466px;
     background-color: white;
     -webkit-box-shadow: 0 0 20px 0 rgba(0,0,0,0.5);
     -moz-box-shadow: 0 0 20px 0 rgba(0,0,0,0.5);
