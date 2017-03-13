@@ -20,7 +20,7 @@ class CityForecastView extends React.Component {
         this.state = {
             cityName: params.cityName,
             coords: coords,
-            units: 'imperial'
+            units: localStorage.getItem('weatherAppUnits') || 'imperial'
         };
         this.navigateToCitySelector = this.navigateToCitySelector.bind(this);
         this.onUnitsSwitchChanged = this.onUnitsSwitchChanged.bind(this);
@@ -32,9 +32,12 @@ class CityForecastView extends React.Component {
     }
 
     onUnitsSwitchChanged(e) {
-        this.setState(prevState => ({
-            units: prevState.units === 'metric' ? 'imperial' : 'metric'
-        }));
+        const units = this.state.units === 'metric' ? 'imperial' : 'metric';
+        localStorage.setItem('weatherAppUnits', units);
+
+        this.setState({
+            units: units
+        });
     }
 
     componentWillMount() {
@@ -71,7 +74,8 @@ class CityForecastView extends React.Component {
         const requestedCity = state.requestedCity,
             currentWeather = state.currentWeather,
             slicedTodaysForecast = state.slicedTodaysForecast,
-            dailyForecast = state.dailyForecast;
+            dailyForecast = state.dailyForecast,
+            units = state.units;
 
         if (requestedCity) {
             cityName = requestedCity.name;
@@ -80,7 +84,7 @@ class CityForecastView extends React.Component {
         }
 
         if (currentWeather && slicedTodaysForecast && dailyForecast) {
-            todaysWeatherComponent = <TodaysWeather current={currentWeather} sliced={slicedTodaysForecast} daily={dailyForecast} units={state.units} />;
+            todaysWeatherComponent = <TodaysWeather current={currentWeather} sliced={slicedTodaysForecast} daily={dailyForecast} units={units} />;
         }
 
         return <div className="city-forecast">
@@ -88,7 +92,7 @@ class CityForecastView extends React.Component {
                 <i className="button-back material-icons" onClick={this.navigateToCitySelector}>&#xE5C4;</i> <span>{cityName}</span>
             </div>
             <label className="switch">
-                <input type="checkbox" onChange={this.onUnitsSwitchChanged} />
+                <input type="checkbox" onChange={this.onUnitsSwitchChanged} checked={(units === 'metric') ? 'true' : ''} />
                 <span className="slider"></span>
                 <span className="switch-label"></span>
             </label>
