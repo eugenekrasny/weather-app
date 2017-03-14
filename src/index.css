@@ -5,19 +5,39 @@ body {
 }
 
 .app-container {
-  height: 100vh;
-  width: 100%;
-  background: linear-gradient(to bottom right, rgb(251,117,111), rgb(251, 130, 109), rgb(250, 154, 122));
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: table;
+    background: linear-gradient(to bottom right, rgb(251,117,111), rgb(251, 130, 109), rgb(250, 154, 122));
 }
 
-#root {
-    position: relative;
-    top: calc(50% - 466px/2);
-    width: 840px;
-    height: 466px;
+.app-container > div {
+    vertical-align: middle;
+    display: table-cell;
+    width:100%;
+    height:100%;
+}
+
+.app-container > div > div {
+    width: calc(100% - 10px);
+    height: 100%;
     margin: auto;
     background-color: white;
     -webkit-box-shadow: 0 0 20px 0 rgba(0,0,0,0.5);
     -moz-box-shadow: 0 0 20px 0 rgba(0,0,0,0.5);
     box-shadow: 0 0 20px 0 rgba(0,0,0,0.5);
+}
+
+@media screen and (min-width: 840px) {
+    .app-container > div > div {
+        width: 840px;
+    }
+}
+
+@media screen and (min-width: 568px) {
+    .app-container > div > div {
+        height: 466px;
+    }
+
 }

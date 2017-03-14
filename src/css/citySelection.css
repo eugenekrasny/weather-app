@@ -1,10 +1,11 @@
 .city-selection {
-    position: relative;
+    position: absolute;
     top: 50%;
-    transform: translateY(-50%);
-    margin: auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
     color: rgb(74,96,109);
+    width: 90%;
 }
 
 .city-selection .city-search-container {
@@ -22,10 +23,12 @@
 
 .city-selection .city-search-container .city-search-field {
     border: none;
+    background: none;
     text-align: center;
     font-size: 30px;
     outline: none;
     padding-left: 34px;
+    width: calc(100% - 74px);
 }
 
 .city-selection .location-selector span {

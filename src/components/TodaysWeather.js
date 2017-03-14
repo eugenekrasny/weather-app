@@ -58,7 +58,7 @@ function CurrentWeather(props) {
             <FormattedDate of={weather.date} />
             <div className="weather-conditions">{weather.conditionsDescription}</div>
             <div>
-                <div className="weather-description">{weather.temp[units]}  <i className={"weather-icon wi "+ weather.conditionsIcon} /></div>
+                <div className="weather-description">{weather.temp[units]}<i className={"weather-icon wi "+ weather.conditionsIcon} /></div>
                 {slicedForecastComponent}
             </div>
         </div>
@@ -91,8 +91,8 @@ function DailyForecast(props) {
     const dailyItems = forecast.map(forecastEntry => {
         return <div key={forecastEntry.date} className="daily-forecast-item">
             <FormattedDate of={forecastEntry.date} format="short" /><br />
-            <i title={forecastEntry.conditionsDescription} className={"weather-icon wi wi-fw " + forecastEntry.conditionsIcon} /><br/>
-            <span>{forecastEntry.temp[units]}</span>
+            <div title={forecastEntry.conditionsDescription} className={"weather-icon wi wi-fw " + forecastEntry.conditionsIcon}></div>
+            <div>{forecastEntry.temp[units]}</div>
         </div>;
     });
 
