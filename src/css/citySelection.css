@@ -1,7 +1,9 @@
 .city-selection {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
     margin: auto;
     text-align: center;
-    padding-top: 130px;
     color: rgb(74,96,109);
 }
 
