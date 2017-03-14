@@ -1,5 +1,6 @@
 import React from 'react'
 import DataLoader from '../utils/DataLoader'
+import axios from 'axios'
 import '../css/citySelection.css'
 
 class CitySelectionView extends React.Component {
@@ -50,24 +51,39 @@ class CitySelectionView extends React.Component {
     }
 
     getCurrentLocation() {
+        var errorFunc = (err) => {
+            console.log(err);
+            this.setState({
+                errorMessage : err.message || err.toString()
+            });
+        };
+
         var success = (position) => {
             console.log(position);
             DataLoader.loadWeatherDataByCoords(position.coords, this.weatherLoadedCallback);
         };
         var error = (err) => {
             console.log(err);
-            this.setState({
-                errorMessage : err.message
-            });
+            // fallback to different service first
+            axios("https://ipinfo.io")
+                .then(response => {
+                    console.log(response);
+                    const city = response.data.city;
+                    if (!city) {
+                        return errorFunc({message: "Can't get location. Please use search."});
+                    }
+                    DataLoader.loadWeatherDataByCityName(city, this.weatherLoadedCallback);
+                })
+                .catch(errorFunc);
         };
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(success, error);
-        } else {
-            this.setState({
-                errorMessage : 'Sorry, but your position is not available at the moment'
-            });
+        if (!navigator.geolocation) {
+            return errorFunc({message: 'Sorry, but your position is not available at the moment'});
         }
+        navigator.geolocation.getCurrentPosition(success, error, {
+            maximumAge: 30 * 60 * 1000,
+            timeout: 2 * 1000
+        });
     }
 }
 
