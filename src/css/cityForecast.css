@@ -93,7 +93,7 @@
 .city-forecast .daily-forecast-container .daily-forecast-item .weather-icon {
     color: rgb(77,102,114);
     font-size: 75px;
-    margin: 5px 0 25px 0;
+    margin: 15px 0 25px 0;
 }
 
 @media screen and (min-width: 568px) {
