@@ -1,9 +1,9 @@
 import React from 'react'
+import CityForecastHeader from '../components/CityForecastHeader'
+import UnitsSwitch from '../components/UnitsSwitch'
 import CurrentWeather from '../components/CurrentWeather'
 import DailyForecast from '../components/DailyForecast'
 import DataLoader from '../utils/DataLoader'
-import '../css/switch.css'
-import '../css/cityForecast.css'
 
 class CityForecastView extends React.Component {
 
@@ -52,42 +52,23 @@ class CityForecastView extends React.Component {
             return null;
         }
 
-        const weather = state.weather;
-
-        let cityName = null,
-            currentWeatherComponent = null,
-            dailyForecastComponent;
-
-        const requestedCity = weather.requestedCity,
+        const weather = state.weather,
+            requestedCity = weather.requestedCity,
             currentWeather = weather.currentWeather,
             slicedTodaysForecast = weather.slicedTodaysForecast,
             dailyForecast = weather.dailyForecast,
             units = state.units;
 
+        let cityName = state.cityName;
         if (requestedCity) {
             cityName = requestedCity.name;
-        } else {
-            cityName = state.cityName;
-        }
-
-        if (currentWeather && slicedTodaysForecast) {
-            currentWeatherComponent = <CurrentWeather weather={currentWeather} sliced={slicedTodaysForecast} units={units} />;
-        }
-        if (dailyForecast) {
-            dailyForecastComponent = <DailyForecast forecast={dailyForecast} units={units} />;
         }
 
         return <div className="city-forecast">
-            <div className="header">
-                <i className="button-back material-icons" onClick={this.navigateToCitySelector}>&#xE5C4;</i> <span>{cityName}</span>
-            </div>
-            <label className="switch">
-                <input type="checkbox" onChange={this.onUnitsSwitchChanged} checked={(units === 'metric') ? 'true' : ''} />
-                <span className="slider"></span>
-                <span className="switch-label"></span>
-            </label>
-            {currentWeatherComponent}
-            {dailyForecastComponent}
+            <CityForecastHeader onBackClickHandler={this.navigateToCitySelector} cityName={cityName} />
+            <UnitsSwitch onChangeHandler={this.onUnitsSwitchChanged} checked={(units === 'metric') ? 'true' : ''} />
+            <CurrentWeather weather={currentWeather} sliced={slicedTodaysForecast} units={units} />
+            <DailyForecast forecast={dailyForecast} units={units} />
         </div>
     }
 }

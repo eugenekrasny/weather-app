@@ -1,15 +1,11 @@
-.city-forecast {
-    color: rgb(78, 102, 112);
-}
-
-.city-forecast .header {
+.header {
     padding: 25px 30px;
     font-size: 28px;
     font-weight: bold;
     display: inline-block;
 }
 
-.city-forecast .header .button-back {
+.header .button-back {
     color: rgb(78, 102, 112);
     line-height: 35px;
     margin-right: 15px;
