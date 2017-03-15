@@ -10,6 +10,7 @@ body {
     width: 100%;
     display: table;
     background: linear-gradient(to bottom right, rgb(251,117,111), rgb(251, 130, 109), rgb(250, 154, 122));
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorStr='#fb756f', EndColorStr='#fa9a7a');
 }
 
 .app-container > div {

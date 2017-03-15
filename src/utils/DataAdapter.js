@@ -115,10 +115,10 @@ function adaptedTemperatureValues(forecast) {
 }
 
 function convertedTemperatureToCelsius(tempInKelvin) {
-    return Math.round(tempInKelvin - 273.5) + '\u2103';
+    return Math.round(tempInKelvin - 273.5) + '°C';
 }
 function convertedTemperatureToFahrenheit(tempInKelvin) {
-    return Math.round(tempInKelvin * 9/5.0 - 459.67) + '\u2109';
+    return Math.round(tempInKelvin * 9/5.0 - 459.67) + '°F';
 }
 
 function adaptedCurrentWeather(forecast) {

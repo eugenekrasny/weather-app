@@ -52,22 +52,18 @@ class CitySelectionView extends React.Component {
 
     getCurrentLocation() {
         var errorFunc = (err) => {
-            console.log(err);
             this.setState({
                 errorMessage : err.message || err.toString()
             });
         };
 
         var success = (position) => {
-            console.log(position);
             DataLoader.loadWeatherDataByCoords(position.coords, this.weatherLoadedCallback);
         };
         var error = (err) => {
-            console.log(err);
             // fallback to different service first
             axios("https://ipinfo.io")
                 .then(response => {
-                    console.log(response);
                     const city = response.data.city;
                     if (!city) {
                         return errorFunc({message: "Can't get location. Please use search."});

@@ -21,12 +21,12 @@
 }
 
 .switch .switch-label:before {
-    content: "\2103";
+    content: "°C";
     padding-left: 12px;
 }
 
 .switch .switch-label:after {
-    content: "\2109";
+    content: "°F";
     padding-right: 12px;
     text-align: right;
 }

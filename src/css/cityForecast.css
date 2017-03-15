@@ -47,48 +47,40 @@
 }
 
 .city-forecast .current-weather .weather-sliced {
-    margin: auto;
-    display: flex;
-    flex-direction: row;
     vertical-align: top;
-    flex-wrap: wrap;
-    justify-content: space-around;
     color: rgb(227, 150, 129);
 }
 
 .city-forecast .current-weather .weather-sliced .slice-container {
-    margin: 5px 0;
+    margin: 5px 4%;
     font-size: 18px;
-    width: 42%;
+    width: 40%;
+    display: inline-block;
+}
+
+.city-forecast .current-weather .weather-sliced .slice-container > * {
+    display: inline-block;
 }
 
 .city-forecast .current-weather .weather-sliced .slice-container .slice-caption {
     width: 80px;
-    display: inline-block;
-}
-
-.city-forecast .current-weather .weather-sliced .slice-container .slice-temperature {
-    display: inline-block;
 }
 
 .city-forecast .daily-forecast-container {
     margin: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
 }
 
 .city-forecast .daily-forecast-container .daily-forecast-item {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
+    display: block;
+    width: 100%;
     font-size: 17px;
     text-align: center;
 }
 
 .city-forecast .daily-forecast-container .daily-forecast-item  > * {
     width: 30%;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .city-forecast .daily-forecast-container .daily-forecast-item .weather-icon {
@@ -105,28 +97,29 @@
 
     .city-forecast .current-weather .weather-sliced {
         margin: 0 0 0 20px !important;
-        display: inline-flex !important;
-        flex-direction: column !important;
+        display: inline-block !important;
         max-width: 150px !important;
     }
 
     .city-forecast .current-weather .weather-sliced .slice-container {
         font-size: 16px !important;
         width: auto !important;
+        margin: 5px 0 !important;
     }
 
     .city-forecast .daily-forecast-container {
-        flex-direction: row !important;
         margin: 10px 0 !important;
     }
 
     .city-forecast .daily-forecast-container .daily-forecast-item {
+        display: inline-block !important;
         font-size: 12px !important;
-        flex-direction: column !important;
+        width: calc(100% / 7) !important;
     }
 
     .city-forecast .daily-forecast-container .daily-forecast-item  > * {
         width: auto !important;
+        display: block !important;
     }
 
     .city-forecast .daily-forecast-container .daily-forecast-item .weather-icon {

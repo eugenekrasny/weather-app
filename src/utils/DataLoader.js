@@ -26,7 +26,6 @@ function loadWeatherData(queryString, callback) {
     axios.get(apiRoute)
         .then(response => {
             const responseData = response.data;
-            console.log(responseData);
             if (200 !== parseInt(responseData.cod, 10)) {
                 DataLoader.lastLoadedData = null;
                 return callback(responseData.message || responseData);
@@ -36,12 +35,10 @@ function loadWeatherData(queryString, callback) {
             localStorage.setItem('lastViewedCity', adaptedJson.requestedCity.name);
             DataLoader.lastLoadedData = adaptedJson;
             callback(null, adaptedJson);
-            console.log(adaptedJson);
         })
         .catch(error => {
             callback(error.message || error);
             DataLoader.lastLoadedData = null;
-            console.log(error);
         })
 
 }
