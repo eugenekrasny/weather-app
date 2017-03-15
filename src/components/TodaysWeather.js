@@ -34,69 +34,77 @@ class TodaysWeather extends React.Component {
 
 export default TodaysWeather;
 
-function CurrentWeather(props) {
-    const weather = props.weather,
-        slicedForecast = props.slicedForecast,
-        units = props.units;
-    if (!weather) {
-        return;
-    }
+class CurrentWeather extends React.Component {
+    render() {
+        const weather = this.props.weather,
+            slicedForecast = this.props.slicedForecast,
+            units = this.props.units;
+        if (!weather) {
+            return;
+        }
 
-    let slicedForecastComponent = null;
-    if (slicedForecast) {
-        const slicedItems = slicedForecast.map((wrappedForecast) => {
-            return <div className="slice-container" key={wrappedForecast.caption}>
-                <div className="slice-caption">{wrappedForecast.caption}</div>
-                <div className="slice-temperature">{wrappedForecast.forecast.temp[units]}</div>
+        let slicedForecastComponent = null;
+        if (slicedForecast) {
+            const slicedItems = slicedForecast.map((wrappedForecast) => {
+                return <div className="slice-container" key={wrappedForecast.caption}>
+                    <div className="slice-caption">{wrappedForecast.caption}</div>
+                    <div className="slice-temperature">{wrappedForecast.forecast.temp[units]}</div>
+                </div>
+            });
+            slicedForecastComponent = <div className="weather-sliced">{slicedItems}</div>
+        }
+
+        return (
+            <div className="current-weather">
+                <FormattedDate of={weather.date}/>
+                <div className="weather-conditions">{weather.conditionsDescription}</div>
+                <div>
+                    <div className="weather-description">{weather.temp[units]}<i
+                        className={"weather-icon wi "+ weather.conditionsIcon}/></div>
+                    {slicedForecastComponent}
+                </div>
             </div>
+        );
+    }
+}
+
+class FormattedDate extends React.Component {
+    render() {
+        const date = this.props.of;
+        if (!date) {
+            return;
+        }
+
+        let format = 'dddd, MMMM Do YYYY';
+        if (this.props.format === 'short') {
+            format = 'dddd';
+        }
+
+        return (
+            <div className="formatted-date">{moment.unix(date - 1).utc().format(format)}</div>
+        );
+    }
+}
+
+class DailyForecast extends React.Component {
+    render() {
+        const forecast = this.props.forecast,
+            units = this.props.units;
+        if (!forecast) {
+            return;
+        }
+
+        const dailyItems = forecast.map(forecastEntry => {
+            return <div key={forecastEntry.date} className="daily-forecast-item">
+                <FormattedDate of={forecastEntry.date} format="short"/>
+                <div title={forecastEntry.conditionsDescription}
+                     className={"weather-icon wi wi-fw " + forecastEntry.conditionsIcon}></div>
+                <div>{forecastEntry.temp[units]}</div>
+            </div>;
         });
-        slicedForecastComponent = <div className="weather-sliced">{slicedItems}</div>
+
+        return (
+            <div className="daily-forecast-container">{dailyItems}</div>
+        );
     }
-
-    return (
-        <div className="current-weather">
-            <FormattedDate of={weather.date} />
-            <div className="weather-conditions">{weather.conditionsDescription}</div>
-            <div>
-                <div className="weather-description">{weather.temp[units]}<i className={"weather-icon wi "+ weather.conditionsIcon} /></div>
-                {slicedForecastComponent}
-            </div>
-        </div>
-    );
-}
-
-function FormattedDate(props) {
-    const date = props.of;
-    if (!date) {
-        return;
-    }
-
-    let format = 'dddd, MMMM Do YYYY';
-    if (props.format === 'short') {
-        format = 'dddd';
-    }
-
-    return (
-        <div className="formatted-date">{moment.unix(props.of - 1).utc().format(format)}</div>
-    );
-}
-
-function DailyForecast(props) {
-    const forecast = props.forecast,
-        units = props.units;
-    if (!forecast) {
-        return;
-    }
-
-    const dailyItems = forecast.map(forecastEntry => {
-        return <div key={forecastEntry.date} className="daily-forecast-item">
-            <FormattedDate of={forecastEntry.date} format="short" />
-            <div title={forecastEntry.conditionsDescription} className={"weather-icon wi wi-fw " + forecastEntry.conditionsIcon}></div>
-            <div>{forecastEntry.temp[units]}</div>
-        </div>;
-    });
-
-    return (
-        <div className="daily-forecast-container">{dailyItems}</div>
-    );
 }
