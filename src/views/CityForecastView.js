@@ -1,5 +1,6 @@
 import React from 'react'
-import TodaysWeather from '../components/TodaysWeather'
+import CurrentWeather from '../components/CurrentWeather'
+import DailyForecast from '../components/DailyForecast'
 import DataLoader from '../utils/DataLoader'
 import '../css/switch.css'
 import '../css/cityForecast.css'
@@ -54,7 +55,8 @@ class CityForecastView extends React.Component {
         const weather = state.weather;
 
         let cityName = null,
-            todaysWeatherComponent = null;
+            currentWeatherComponent = null,
+            dailyForecastComponent;
 
         const requestedCity = weather.requestedCity,
             currentWeather = weather.currentWeather,
@@ -68,8 +70,11 @@ class CityForecastView extends React.Component {
             cityName = state.cityName;
         }
 
-        if (currentWeather && slicedTodaysForecast && dailyForecast) {
-            todaysWeatherComponent = <TodaysWeather current={currentWeather} sliced={slicedTodaysForecast} daily={dailyForecast} units={units} />;
+        if (currentWeather && slicedTodaysForecast) {
+            currentWeatherComponent = <CurrentWeather weather={currentWeather} sliced={slicedTodaysForecast} units={units} />;
+        }
+        if (dailyForecast) {
+            dailyForecastComponent = <DailyForecast forecast={dailyForecast} units={units} />;
         }
 
         return <div className="city-forecast">
@@ -81,7 +86,8 @@ class CityForecastView extends React.Component {
                 <span className="slider"></span>
                 <span className="switch-label"></span>
             </label>
-            {todaysWeatherComponent}
+            {currentWeatherComponent}
+            {dailyForecastComponent}
         </div>
     }
 }

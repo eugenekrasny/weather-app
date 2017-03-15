@@ -1,0 +1,67 @@
+.current-weather {
+    margin: 0 10px 0 20px;
+}
+
+.current-weather .formatted-date {
+    font-size: 24px;
+    font-weight: 300;
+}
+
+.current-weather .weather-conditions {
+    margin: 10px 0;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.current-weather .weather-description {
+    color: rgb(227, 150, 129);
+    display: block;
+    text-align: center;
+    font-size: 80px;
+    line-height: 150px;
+}
+
+.current-weather .weather-icon {
+    font-size: 80px;
+    color: rgb(227, 150, 129);
+    margin: 0 25px;
+}
+
+.current-weather .weather-sliced {
+    vertical-align: baseline;
+    color: rgb(227, 150, 129);
+}
+
+.current-weather .weather-sliced .slice-container {
+    margin: 5px 4%;
+    font-size: 18px;
+    width: 40%;
+    display: inline-block;
+}
+
+.current-weather .weather-sliced .slice-container > * {
+    display: inline-block;
+}
+
+.current-weather .weather-sliced .slice-container .slice-caption {
+    width: 80px;
+}
+
+@media screen and (min-width: 568px) {
+    .current-weather .weather-description {
+        display: inline-block !important;
+        text-align: left !important;
+    }
+
+    .current-weather .weather-sliced {
+        margin: 0 0 0 20px !important;
+        display: inline-block !important;
+        max-width: 150px !important;
+    }
+
+    .current-weather .weather-sliced .slice-container {
+        font-size: 16px !important;
+        width: auto !important;
+        margin: 5px 0 !important;
+    }
+}

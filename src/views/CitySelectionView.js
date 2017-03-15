@@ -17,7 +17,6 @@ class CitySelectionView extends React.Component {
         if (this.state.errorMessage) {
             errorMessageComponent = <div className="error-message">Error: {this.state.errorMessage}</div>
         }
-        //TODO: handle error messages
         return <div className="city-selection">
             <div className="city-search-container">
                 <form onSubmit={this.onSearchClick} >
