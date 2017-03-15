@@ -47,7 +47,7 @@
 }
 
 .city-forecast .current-weather .weather-sliced {
-    vertical-align: top;
+    vertical-align: baseline;
     color: rgb(227, 150, 129);
 }
 
