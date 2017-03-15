@@ -57,12 +57,13 @@
 }
 
 .city-forecast .current-weather .weather-sliced .slice-container {
-    margin: 10px 0;
+    margin: 5px 0;
     font-size: 18px;
+    width: 42%;
 }
 
 .city-forecast .current-weather .weather-sliced .slice-container .slice-caption {
-    width: 90px;
+    width: 80px;
     display: inline-block;
 }
 
@@ -93,7 +94,7 @@
 .city-forecast .daily-forecast-container .daily-forecast-item .weather-icon {
     color: rgb(77,102,114);
     font-size: 75px;
-    margin: 15px 0 25px 0;
+    margin: 15px 0 20px 0;
 }
 
 @media screen and (min-width: 568px) {
@@ -110,10 +111,7 @@
 
     .city-forecast .current-weather .weather-sliced .slice-container {
         font-size: 16px !important;
-    }
-
-    .city-forecast .current-weather .weather-sliced .slice-container .slice-caption {
-        width: 80px !important;
+        width: auto !important;
     }
 
     .city-forecast .daily-forecast-container {
