@@ -107,6 +107,7 @@
         margin: 0 0 0 20px !important;
         display: inline-flex !important;
         flex-direction: column !important;
+        max-width: 150px !important;
     }
 
     .city-forecast .current-weather .weather-sliced .slice-container {
