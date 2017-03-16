@@ -2,7 +2,7 @@ import { Router, Route, hashHistory } from 'react-router'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import './libs/material-icons/material-icons.css'
+import 'material-design-icons/iconfont/material-icons.css';
 
 import CitySelectionView from './views/CitySelectionView'
 import CityForecastView from './views/CityForecastView'

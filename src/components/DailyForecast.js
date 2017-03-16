@@ -1,6 +1,7 @@
 import React from 'react';
 import FormattedDate from './FormattedDate'
 import '../css/dailyForecast.css'
+import 'weather-icons/css/weather-icons.min.css'
 
 class DailyForecast extends React.Component {
     render() {

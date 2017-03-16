@@ -47,6 +47,10 @@
     width: 80px;
 }
 
+.wi-day-clear:before, .wi-clear:before {
+    content:"\f00d"
+}
+
 @media screen and (min-width: 568px) {
     .current-weather .weather-description {
         display: inline-block !important;
