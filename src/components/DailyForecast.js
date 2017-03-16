@@ -16,16 +16,16 @@ class DailyForecast extends React.Component {
         }
 
         const dailyItems = forecast.map(forecastEntry => {
-            return <div key={forecastEntry.date} className="daily-forecast-item">
+            return <li key={forecastEntry.date}>
                 <FormattedDate of={forecastEntry.date} format="short"/>
-                <div title={forecastEntry.conditionsDescription}
-                     className={"weather-icon wi wi-fw " + forecastEntry.conditionsIcon}></div>
-                <div>{forecastEntry.temp[units]}</div>
-            </div>;
+                <i title={forecastEntry.conditionsDescription}
+                     className={"weather-icon wi wi-fw " + forecastEntry.conditionsIcon} />
+                <span>{forecastEntry.temp[units]}</span>
+            </li>;
         });
 
         return (
-            <div className="daily-forecast-container">{dailyItems}</div>
+            <ul className="daily-forecast">{dailyItems}</ul>
         );
     }
 }
