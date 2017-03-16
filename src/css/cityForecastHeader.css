@@ -1,9 +1,7 @@
 .header {
-    padding: 25px 30px;
+    margin: 25px 30px;
     font-size: 28px;
-    font-weight: bold;
     display: inline-block;
-    line-height: 35px;
 }
 
 .header .button-back {
