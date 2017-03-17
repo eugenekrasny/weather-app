@@ -15,19 +15,15 @@ class CitySelectionView extends React.Component {
     render() {
         let errorMessageComponent = null;
         if (this.state.errorMessage) {
-            errorMessageComponent = <div className="error-message">Error: {this.state.errorMessage}</div>
+            errorMessageComponent = <h4 className="error-message">Error: {this.state.errorMessage}</h4>
         }
         return <div className="city-selection">
-            <div className="city-search-container">
-                <form onSubmit={this.onSearchClick} >
-                    <input className="city-search-field" type="text" placeholder="City" ref={(input) => { this.searchField = input; }} maxLength="20" />
-                    <button type="submit" className="city-search-button"><i className="material-icons">&#xE8B6;</i></button>
-                </form>
-            </div>
-            <div className="location-selector">
-                <span className="or">or</span>
-                <span>use my <a href="#" onClick={this.getCurrentLocation}>current position</a></span>
-            </div>
+            <form className="city-search" onSubmit={this.onSearchClick} >
+                <input className="city-search-field" type="text" placeholder="City" ref={(input) => { this.searchField = input; }} maxLength="20" />
+                <button type="submit" className="city-search-button"><i className="material-icons">&#xE8B6;</i></button>
+            </form>
+            <p className="or-caption">or</p>
+            <p>use my <span className="use-current-position" onClick={this.getCurrentLocation}>current position</span></p>
             {errorMessageComponent}
         </div>
     }
