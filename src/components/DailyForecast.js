@@ -18,7 +18,7 @@ class DailyForecast extends React.Component {
         const dailyItems = forecast.map(forecastEntry => {
             return <li key={forecastEntry.date}>
                 <FormattedDate of={forecastEntry.date} format="short"/>
-                <i title={forecastEntry.conditionsDescription}
+                <span title={forecastEntry.conditionsDescription}
                      className={"weather-icon wi wi-fw " + forecastEntry.conditionsIcon} />
                 <span>{forecastEntry.temp[units]}</span>
             </li>;

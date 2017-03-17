@@ -20,23 +20,20 @@ class CurrentWeather extends React.Component {
         let slicedForecastComponent = null;
         if (slicedForecast) {
             const slicedItems = slicedForecast.map((wrappedForecast) => {
-                return <div className="slice-container" key={wrappedForecast.caption}>
-                    <div className="slice-caption">{wrappedForecast.caption}</div>
-                    <div className="slice-temperature">{wrappedForecast.forecast.temp[units]}</div>
-                </div>
+                return <li key={wrappedForecast.caption}>
+                    <span className="slice-caption">{wrappedForecast.caption}</span>
+                    <span className="slice-temperature">{wrappedForecast.forecast.temp[units]}</span>
+                </li>
             });
-            slicedForecastComponent = <div className="weather-sliced">{slicedItems}</div>
+            slicedForecastComponent = <ul className="weather-sliced">{slicedItems}</ul>
         }
 
         return (
             <div className="current-weather">
-                <FormattedDate of={weather.date} />
-                <div className="weather-conditions">{weather.conditionsDescription}</div>
-                <div>
-                    <div className="weather-description">{weather.temp[units]}<i
-                        className={"weather-icon wi "+ weather.conditionsIcon}/></div>
-                    {slicedForecastComponent}
-                </div>
+                <h3><FormattedDate of={weather.date} /></h3>
+                <h4>{weather.conditionsDescription}</h4>
+                <h1 className="weather-description">{weather.temp[units]}<i className={"weather-icon wi "+ weather.conditionsIcon}/></h1>
+                {slicedForecastComponent}
             </div>
         );
     }
