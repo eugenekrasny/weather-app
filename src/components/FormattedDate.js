@@ -19,7 +19,7 @@ class FormattedDate extends React.Component {
         }
 
         return (
-            <div className="formatted-date">{moment.unix(date - 1).utc().format(format)}</div>
+            <span>{moment.unix(date - 1).utc().format(format)}</span>
         );
     }
 }

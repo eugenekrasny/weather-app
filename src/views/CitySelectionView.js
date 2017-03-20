@@ -1,33 +1,34 @@
 import React from 'react'
 import DataLoader from '../utils/DataLoader'
 import axios from 'axios'
+import InlineLoader from '../components/InlineLoader'
 import '../css/citySelection.css'
 
 class CitySelectionView extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {isLoading: false};
         this.onSearchClick = this.onSearchClick.bind(this);
         this.getCurrentLocation = this.getCurrentLocation.bind(this);
         this.weatherLoadedCallback = this.weatherLoadedCallback.bind(this);
     }
 
     render() {
+        if (this.state.isLoading) {
+            return <InlineLoader />;
+        }
+
         let errorMessageComponent = null;
         if (this.state.errorMessage) {
-            errorMessageComponent = <div className="error-message">Error: {this.state.errorMessage}</div>
+            errorMessageComponent = <h4 className="error-message">Error: {this.state.errorMessage}</h4>
         }
         return <div className="city-selection">
-            <div className="city-search-container">
-                <form onSubmit={this.onSearchClick} >
-                    <input className="city-search-field" type="text" placeholder="City" ref={(input) => { this.searchField = input; }} maxLength="20" />
-                    <button type="submit" className="city-search-button"><i className="material-icons">&#xE8B6;</i></button>
-                </form>
-            </div>
-            <div className="location-selector">
-                <span className="or">or</span>
-                <span>use my <a href="#" onClick={this.getCurrentLocation}>current position</a></span>
-            </div>
+            <form className="city-search" onSubmit={this.onSearchClick} >
+                <input className="city-search-field" type="text" placeholder="City" ref={(input) => { this.searchField = input; }} maxLength="20" />
+                <button type="submit" className="city-search-button"><i className="material-icons">&#xE8B6;</i></button>
+            </form>
+            <p className="or-caption">or</p>
+            <p>use my <span className="use-current-position" onClick={this.getCurrentLocation}>current position</span></p>
             {errorMessageComponent}
         </div>
     }
@@ -36,13 +37,18 @@ class CitySelectionView extends React.Component {
         e.preventDefault();
         const inputValue = this.searchField.value;
         if (inputValue && 0 < inputValue.length) {
-            DataLoader.loadWeatherDataByCityName(inputValue, this.weatherLoadedCallback);
+            this.setState({
+                isLoading: true
+            }, () => {
+                DataLoader.loadWeatherDataByCityName(inputValue, this.weatherLoadedCallback);
+            });
         }
     }
 
     weatherLoadedCallback(error, result) {
         if (error) {
             return this.setState({
+                isLoading: false,
                 errorMessage: error || 'Error'
             });
         }
@@ -52,6 +58,7 @@ class CitySelectionView extends React.Component {
     getCurrentLocation() {
         var errorFunc = (err) => {
             this.setState({
+                isLoading: false,
                 errorMessage : err.message || err.toString()
             });
         };
@@ -75,9 +82,13 @@ class CitySelectionView extends React.Component {
         if (!navigator.geolocation) {
             return errorFunc({message: 'Sorry, but your position is not available at the moment'});
         }
-        navigator.geolocation.getCurrentPosition(success, error, {
-            maximumAge: 30 * 60 * 1000,
-            timeout: 2 * 1000
+        this.setState({
+            isLoading: true
+        }, () => {
+            navigator.geolocation.getCurrentPosition(success, error, {
+                maximumAge: 30 * 60 * 1000,
+                timeout: 2 * 1000
+            });
         });
     }
 }

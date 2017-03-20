@@ -8,12 +8,12 @@
     width: 90%;
 }
 
-.city-selection .city-search-container {
+.city-selection form {
     border-bottom: 1px solid rgb(74,96,109);
     display: inline-block;
     margin: 20px 0 10px 0;
 }
-.city-selection .city-search-container .city-search-button {
+.city-selection form .city-search-button {
     cursor: pointer;
     border: none;
     background: none;
@@ -21,7 +21,7 @@
     padding-right: 0;
 }
 
-.city-selection .city-search-container .city-search-field {
+.city-selection form .city-search-field {
     border: none;
     background: none;
     text-align: center;
@@ -31,22 +31,18 @@
     width: calc(100% - 88px);
 }
 
-.city-selection .location-selector span {
-    display: block;
-    margin: 15px 0;
-}
-
-.city-selection .location-selector .or {
+.city-selection .or-caption {
     font-size: 14px;
 }
 
-.city-selection .location-selector a {
+.city-selection .use-current-position {
     color: rgb(74,96,109);
     border-bottom: 1px dotted rgb(74,96,109);
-    text-decoration: none;
+    cursor: pointer;
 }
 
 .city-selection .error-message {
     color: red;
     margin-top: 20px;
+    font-weight: normal;
 }
