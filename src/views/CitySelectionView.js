@@ -1,18 +1,23 @@
 import React from 'react'
 import DataLoader from '../utils/DataLoader'
 import axios from 'axios'
+import InlineLoader from '../components/InlineLoader'
 import '../css/citySelection.css'
 
 class CitySelectionView extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {isLoading: false};
         this.onSearchClick = this.onSearchClick.bind(this);
         this.getCurrentLocation = this.getCurrentLocation.bind(this);
         this.weatherLoadedCallback = this.weatherLoadedCallback.bind(this);
     }
 
     render() {
+        if (this.state.isLoading) {
+            return <InlineLoader />;
+        }
+
         let errorMessageComponent = null;
         if (this.state.errorMessage) {
             errorMessageComponent = <h4 className="error-message">Error: {this.state.errorMessage}</h4>
@@ -32,13 +37,18 @@ class CitySelectionView extends React.Component {
         e.preventDefault();
         const inputValue = this.searchField.value;
         if (inputValue && 0 < inputValue.length) {
-            DataLoader.loadWeatherDataByCityName(inputValue, this.weatherLoadedCallback);
+            this.setState({
+                isLoading: true
+            }, () => {
+                DataLoader.loadWeatherDataByCityName(inputValue, this.weatherLoadedCallback);
+            });
         }
     }
 
     weatherLoadedCallback(error, result) {
         if (error) {
             return this.setState({
+                isLoading: false,
                 errorMessage: error || 'Error'
             });
         }
@@ -48,6 +58,7 @@ class CitySelectionView extends React.Component {
     getCurrentLocation() {
         var errorFunc = (err) => {
             this.setState({
+                isLoading: false,
                 errorMessage : err.message || err.toString()
             });
         };
@@ -71,9 +82,13 @@ class CitySelectionView extends React.Component {
         if (!navigator.geolocation) {
             return errorFunc({message: 'Sorry, but your position is not available at the moment'});
         }
-        navigator.geolocation.getCurrentPosition(success, error, {
-            maximumAge: 30 * 60 * 1000,
-            timeout: 2 * 1000
+        this.setState({
+            isLoading: true
+        }, () => {
+            navigator.geolocation.getCurrentPosition(success, error, {
+                maximumAge: 30 * 60 * 1000,
+                timeout: 2 * 1000
+            });
         });
     }
 }

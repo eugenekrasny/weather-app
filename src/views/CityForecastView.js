@@ -1,6 +1,7 @@
 import React from 'react'
 import DataLoader from '../utils/DataLoader'
 import FormattedDate from '../components/FormattedDate'
+import InlineLoader from '../components/InlineLoader'
 import '../css/cityForecast.css'
 import 'weather-icons/css/weather-icons.min.css'
 
@@ -55,18 +56,22 @@ class CityForecastView extends React.Component {
             units = state.units;
 
         let currentWeatherComponent = null,
-            dailyForecastComponent = null;
+            dailyForecastComponent = null,
+            loaderComponent = null;
 
         let cityName = state.cityName;
         if (weather) {
             currentWeatherComponent = <CurrentWeather weather={weather.currentWeather} sliced={weather.slicedTodaysForecast} units={units} />;
             dailyForecastComponent = <DailyForecast forecast={weather.dailyForecast} units={units} />;
             cityName = weather.requestedCity ? weather.requestedCity.name : cityName;
+        } else {
+            loaderComponent = <InlineLoader />;
         }
 
         return <div className="city-forecast">
             <CityForecastHeader onBackClickHandler={this.navigateToCitySelector} cityName={cityName} />
             <UnitsSwitch onChangeHandler={this.onUnitsSwitchChanged} checked={(units === 'metric') ? 'true' : ''} />
+            {loaderComponent}
             {currentWeatherComponent}
             {dailyForecastComponent}
         </div>
