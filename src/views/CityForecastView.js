@@ -48,27 +48,28 @@ class CityForecastView extends React.Component {
 
     render() {
         const state = this.state;
-        if (!state || !state.weather) {
+        if (!state) {
             return null;
         }
 
         const weather = state.weather,
-            requestedCity = weather.requestedCity,
-            currentWeather = weather.currentWeather,
-            slicedTodaysForecast = weather.slicedTodaysForecast,
-            dailyForecast = weather.dailyForecast,
             units = state.units;
 
+        let currentWeatherComponent = null,
+            dailyForecastComponent = null;
+
         let cityName = state.cityName;
-        if (requestedCity) {
-            cityName = requestedCity.name;
+        if (weather) {
+            currentWeatherComponent = <CurrentWeather weather={weather.currentWeather} sliced={weather.slicedTodaysForecast} units={units} />;
+            dailyForecastComponent = <DailyForecast forecast={weather.dailyForecast} units={units} />;
+            cityName = weather.requestedCity ? weather.requestedCity.name : cityName;
         }
 
         return <div className="city-forecast">
             <CityForecastHeader onBackClickHandler={this.navigateToCitySelector} cityName={cityName} />
             <UnitsSwitch onChangeHandler={this.onUnitsSwitchChanged} checked={(units === 'metric') ? 'true' : ''} />
-            <CurrentWeather weather={currentWeather} sliced={slicedTodaysForecast} units={units} />
-            <DailyForecast forecast={dailyForecast} units={units} />
+            {currentWeatherComponent}
+            {dailyForecastComponent}
         </div>
     }
 }

@@ -13,9 +13,6 @@ class CurrentWeather extends React.Component {
         const weather = props.weather,
             slicedForecast = props.sliced,
             units = props.units;
-        if (!weather) {
-            return;
-        }
 
         let slicedForecastComponent = null;
         if (slicedForecast) {
