@@ -1,81 +1,62 @@
-import React from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import DataLoader from '../utils/DataLoader'
 import FormattedDate from '../components/FormattedDate'
 import InlineLoader from '../components/InlineLoader'
 import '../css/cityForecast.css'
 import 'weather-icons/css/weather-icons.min.css'
 
-class CityForecastView extends React.Component {
+function CityForecastView(props) {
+    const [weather, setWeather] = useState(DataLoader.getLastLoadedData());
+    const [units, setUnits] = useState(localStorage.getItem('weatherAppUnits') || 'imperial');
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            weather: DataLoader.getLastLoadedData(),
-            cityName: props.params.cityName,
-            units: localStorage.getItem('weatherAppUnits') || 'imperial'
-        };
-        this.navigateToCitySelector = this.navigateToCitySelector.bind(this);
-        this.onUnitsSwitchChanged = this.onUnitsSwitchChanged.bind(this);
-    }
+    const { cityName } = useParams();
 
-    navigateToCitySelector(e) {
-        e.preventDefault();
-        this.context.router.push('/');
-    }
+    const navigate = useNavigate();
 
-    onUnitsSwitchChanged(e) {
-        const units = this.state.units === 'metric' ? 'imperial' : 'metric';
-        localStorage.setItem('weatherAppUnits', units);
+    useEffect(() => {
+        DataLoader.loadWeatherDataByCityName(cityName, (error) => {
+            if (error) {
+                navigate('/');
+            }
 
-        this.setState({
-            units: units
+            setWeather(DataLoader.getLastLoadedData());
         });
+    }, []);
+
+    const navigateToCitySelector = useCallback((e) => {
+        e.preventDefault();
+        navigate('/');
+    }, [navigate]);
+
+    useEffect(() => {
+        localStorage.setItem('weatherAppUnits', units);
+    }, [units]);
+
+    const onUnitsSwitchChanged = useCallback((e) => {
+        setUnits((prevUnits) => prevUnits === 'metric' ? 'imperial' : 'metric');
+    }, []);
+
+    let currentWeatherComponent = null,
+        dailyForecastComponent = null,
+        loaderComponent = null;
+
+    if (weather) {
+        currentWeatherComponent = <CurrentWeather weather={weather.currentWeather} sliced={weather.slicedTodaysForecast} units={units} />;
+        dailyForecastComponent = <DailyForecast forecast={weather.dailyForecast} units={units} />;
+    } else {
+        loaderComponent = <InlineLoader />;
     }
 
-    componentWillMount() {
-        if (!this.state.weather) {
-            DataLoader.loadWeatherDataByCityName(this.state.cityName, (error) => {
-                if (error) {
-                    this.context.router.push('/');
-                }
-
-                this.setState({
-                    weather: DataLoader.getLastLoadedData()
-                })
-            });
-        }
-    }
-
-    render() {
-        const state = this.state;
-        if (!state) {
-            return null;
-        }
-
-        const weather = state.weather,
-            units = state.units;
-
-        let currentWeatherComponent = null,
-            dailyForecastComponent = null,
-            loaderComponent = null;
-
-        let cityName = state.cityName;
-        if (weather) {
-            currentWeatherComponent = <CurrentWeather weather={weather.currentWeather} sliced={weather.slicedTodaysForecast} units={units} />;
-            dailyForecastComponent = <DailyForecast forecast={weather.dailyForecast} units={units} />;
-            cityName = weather.requestedCity ? weather.requestedCity.name : cityName;
-        } else {
-            loaderComponent = <InlineLoader />;
-        }
-
-        return <div className="city-forecast">
-            <CityForecastHeader onBackClickHandler={this.navigateToCitySelector} cityName={cityName} />
-            <UnitsSwitch onChangeHandler={this.onUnitsSwitchChanged} checked={(units === 'metric') ? 'true' : ''} />
+    return (
+        <div className="city-forecast">
+            <CityForecastHeader onBackClickHandler={navigateToCitySelector} cityName={weather?.requestedCity?.name || cityName} />
+            <UnitsSwitch onChangeHandler={onUnitsSwitchChanged} checked={units === 'metric'} />
             {loaderComponent}
             {currentWeatherComponent}
             {dailyForecastComponent}
         </div>
-    }
+    );
 }
 
 function CityForecastHeader(props) {
@@ -93,10 +74,6 @@ function UnitsSwitch(props) {
 }
 
 function CurrentWeather(props) {
-    if (!props) {
-        return;
-    }
-
     const weather = props.weather,
         slicedForecast = props.sliced,
         units = props.units;
@@ -123,10 +100,6 @@ function CurrentWeather(props) {
 }
 
 function DailyForecast(props) {
-    if (!props) {
-        return;
-    }
-
     const forecast = props.forecast,
         units = props.units;
 
@@ -146,9 +119,5 @@ function DailyForecast(props) {
         <ul className="daily-forecast">{dailyItems}</ul>
     );
 }
-
-CityForecastView.contextTypes = {
-    router: React.PropTypes.object
-};
 
 export default CityForecastView;
