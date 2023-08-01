@@ -1,48 +1,48 @@
 .city-selection {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: rgb(74,96,109);
-    width: 90%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: rgb(74, 96, 109);
+  width: 90%;
 }
 
-.city-selection form {
-    border-bottom: 1px solid rgb(74,96,109);
-    display: inline-block;
-    margin: 20px 0 10px 0;
+.city-selection__search-form {
+  border-bottom: 1px solid rgb(74, 96, 109);
+  display: inline-block;
+  margin: 20px 0 10px 0;
 }
-.city-selection form .city-search-button {
-    cursor: pointer;
-    border: none;
-    background: none;
-    outline: none;
-    padding-right: 0;
-}
-
-.city-selection form .city-search-field {
-    border: none;
-    background: none;
-    text-align: center;
-    font-size: 30px;
-    outline: none;
-    padding-left: 34px;
-    width: calc(100% - 88px);
+.city-selection__search-button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  outline: none;
+  padding-right: 0;
 }
 
-.city-selection .or-caption {
-    font-size: 14px;
+.city-selection__search-field {
+  border: none;
+  background: none;
+  text-align: center;
+  font-size: 30px;
+  outline: none;
+  padding-left: 34px;
+  width: calc(100% - 88px);
 }
 
-.city-selection .use-current-position {
-    color: rgb(74,96,109);
-    border-bottom: 1px dotted rgb(74,96,109);
-    cursor: pointer;
+.city-selection__or-caption {
+  font-size: 14px;
 }
 
-.city-selection .error-message {
-    color: red;
-    margin-top: 20px;
-    font-weight: normal;
+.city-selection__use-current-position {
+  color: rgb(74, 96, 109);
+  border-bottom: 1px dotted rgb(74, 96, 109);
+  cursor: pointer;
+}
+
+.city-selection__error-message {
+  color: red;
+  margin-top: 20px;
+  font-weight: normal;
 }

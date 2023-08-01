@@ -1,0 +1,44 @@
+.daily-forecast {
+  margin: 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.daily-forecast__item {
+  width: 100%;
+  font-size: 17px;
+  text-align: center;
+}
+
+.daily-forecast li > * {
+  width: 30%;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.daily-forecast__item-icon {
+  color: rgb(77, 102, 114);
+  font-size: 75px;
+  margin: 15px 0 20px 0;
+}
+
+@media screen and (min-width: 568px) {
+  .daily-forecast {
+    margin: 10px 0 !important;
+  }
+
+  .daily-forecast__item {
+    display: inline-block !important;
+    font-size: 12px !important;
+    width: calc(100% / 7) !important;
+  }
+
+  .daily-forecast li > * {
+    width: auto !important;
+    display: block !important;
+  }
+
+  .daily-forecast__item-icon {
+    font-size: 50px !important;
+  }
+}
