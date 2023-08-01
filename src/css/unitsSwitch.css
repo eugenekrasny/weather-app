@@ -1,0 +1,68 @@
+.switch {
+  position: relative;
+  top: 25px;
+  right: 20px;
+  width: 80px;
+  height: 26px;
+  float: right;
+  border: 1px solid rgb(76, 91, 99);
+  border-radius: 34px;
+  overflow: hidden;
+}
+
+.switch__label:before,
+.switch__label:after {
+  display: block;
+  float: left;
+  width: 50%;
+  height: 26px;
+  line-height: 26px;
+  color: black;
+  box-sizing: border-box;
+}
+
+.switch__label:before {
+  content: '°C';
+  padding-left: 12px;
+}
+
+.switch__label:after {
+  content: '°F';
+  padding-right: 12px;
+  text-align: right;
+}
+
+.switch__input {
+  display: none;
+}
+
+.switch__slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: -10px;
+  right: 0;
+  bottom: 0;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  background-color: white;
+  width: 55px;
+}
+
+.switch__slider:before {
+  position: absolute;
+  content: '';
+  height: 22px;
+  width: 30px;
+  top: 1px;
+  left: 11px;
+  border: 1px solid rgb(76, 91, 99);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 20px;
+  background-color: white;
+}
+
+.switch__input:checked + .switch__slider {
+  margin-left: 46px;
+}

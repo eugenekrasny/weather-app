@@ -8,12 +8,12 @@
   width: 90%;
 }
 
-.city-selection form {
+.city-selection__search-form {
   border-bottom: 1px solid rgb(74, 96, 109);
   display: inline-block;
   margin: 20px 0 10px 0;
 }
-.city-selection form .city-search-button {
+.city-selection__search-button {
   cursor: pointer;
   border: none;
   background: none;
@@ -21,7 +21,7 @@
   padding-right: 0;
 }
 
-.city-selection form .city-search-field {
+.city-selection__search-field {
   border: none;
   background: none;
   text-align: center;
@@ -31,17 +31,17 @@
   width: calc(100% - 88px);
 }
 
-.city-selection .or-caption {
+.city-selection__or-caption {
   font-size: 14px;
 }
 
-.city-selection .use-current-position {
+.city-selection__use-current-position {
   color: rgb(74, 96, 109);
   border-bottom: 1px dotted rgb(74, 96, 109);
   cursor: pointer;
 }
 
-.city-selection .error-message {
+.city-selection__error-message {
   color: red;
   margin-top: 20px;
   font-weight: normal;

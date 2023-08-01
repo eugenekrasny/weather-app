@@ -1,0 +1,15 @@
+.forecast-header {
+  margin: 25px 30px;
+  font-size: 28px;
+  display: inline-block;
+}
+
+.forecast-header__button-back {
+  color: rgb(78, 102, 112);
+  margin-right: 15px;
+  vertical-align: middle;
+  padding: 0;
+  background: none;
+  outline: none;
+  border: none;
+}

@@ -6,7 +6,7 @@
   height: 50px;
 }
 
-.inline-loader > * {
+.inline-loader__icon {
   font-size: 50px !important;
   color: rgb(78, 102, 112);
 }

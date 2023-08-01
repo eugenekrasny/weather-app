@@ -1,30 +1,32 @@
 import moment from 'moment';
+import {
+  DayForecast,
+  OpenWeatherMapForecastList,
+  OpenWeatherMapForecastListEntry,
+  OpenWeatherMapForecastResponse,
+  SliceForecast,
+  WeatherForecast,
+} from '../types';
 
-class DataAdapter {
-  static adaptJSON(json) {
-    if (!json.list || 0 >= json.list.length) {
-      return { forecastError: json };
-    }
+const adaptJSON = (response: OpenWeatherMapForecastResponse): WeatherForecast => {
+  const currentWeather = response.list[0];
+  const slicedForecast = filteredSlicedForecast(response.list, currentWeather);
+  let dailyForecast = filteredDailyForecast(response.list);
+  dailyForecast = extendedDailyForecastWithTodaysForecastIfNeeded(
+    dailyForecast,
+    slicedForecast[slicedForecast.length - 1],
+  );
+  dailyForecast = dailyForecastWithMockObjectsIfNeeded(dailyForecast);
 
-    const currentWeather = json.list[0],
-      slicedForecast = filteredSlicedForecast(json.list, currentWeather);
-    let dailyForecast = filteredDailyForecast(json.list);
-    dailyForecast = extendedDailyForecastWithTodaysForecastIfNeeded(
-      dailyForecast,
-      slicedForecast[slicedForecast.length - 1],
-    );
-    dailyForecast = dailyForecastWithMockObjectsIfNeeded(dailyForecast);
+  return {
+    requestedCity: response.city,
+    currentWeather: adaptedCurrentWeather(currentWeather),
+    slicedTodaysForecast: adaptedSlicedTodaysForecast(slicedForecast),
+    dailyForecast: adaptedDailyForecast(dailyForecast),
+  };
+};
 
-    return {
-      requestedCity: json.city,
-      currentWeather: adaptedCurrentWeather(currentWeather),
-      slicedTodaysForecast: adaptedSlicedTodaysForecast(slicedForecast),
-      dailyForecast: adaptedDailyForecast(dailyForecast),
-    };
-  }
-}
-
-export default DataAdapter;
+export default adaptJSON;
 
 const kDaySliceOffsets = {
     morning: 6,
@@ -38,18 +40,21 @@ const kDaySliceOffsets = {
     morning: 3,
   };
 
-function filteredSlicedForecast(json, currentWeather) {
-  const tomorrowsStartOfDay = moment.utc().add(1, 'days').startOf('day').unix(),
-    startDate = moment.unix(currentWeather.dt).utc().startOf('day'),
-    slicedForecast = [null, null, null, null];
-  json
+function filteredSlicedForecast(
+  forecastList: OpenWeatherMapForecastList,
+  currentWeather: OpenWeatherMapForecastListEntry,
+) {
+  const tomorrowsStartOfDay = moment.utc().add(1, 'days').startOf('day').unix();
+  const startDate = moment.unix(currentWeather.dt).utc().startOf('day');
+  const slicedForecast: OpenWeatherMapForecastList = [];
+  forecastList
     .filter((forecastEntry) => {
       return forecastEntry.dt <= tomorrowsStartOfDay;
     })
     .reverse()
     .forEach((forecastEntry, index) => {
       const hoursDiff = moment.unix(forecastEntry.dt).diff(startDate, 'hours');
-      if (0 === index) {
+      if (index === 0) {
         return (slicedForecast[kDaySliceIndexes.night] = forecastEntry);
       }
 
@@ -71,14 +76,14 @@ function filteredSlicedForecast(json, currentWeather) {
   });
 }
 
-function filteredDailyForecast(json) {
-  return json.filter((forecastEntry) => {
-    const hourlyForecastDate = moment.unix(forecastEntry.dt).utc(),
-      hourlyForecastStartOfDayDate = moment
+function filteredDailyForecast(forecastList: OpenWeatherMapForecastList) {
+  return forecastList.filter((forecastEntry) => {
+    const hourlyForecastDate = moment.unix(forecastEntry.dt).utc();
+    const hourlyForecastStartOfDayDate = moment
         .unix(forecastEntry.dt)
         .utc()
-        .startOf('day'),
-      diffInHours = hourlyForecastDate.diff(
+        .startOf('day');
+    const diffInHours = hourlyForecastDate.diff(
         hourlyForecastStartOfDayDate,
         'hours',
       );
@@ -87,11 +92,11 @@ function filteredDailyForecast(json) {
 }
 
 function extendedDailyForecastWithTodaysForecastIfNeeded(
-  dailyForecast,
-  todaysWeather,
+  dailyForecast: OpenWeatherMapForecastList,
+  todaysWeather: OpenWeatherMapForecastListEntry,
 ) {
-  const firstEntryInDailyForecast = moment.unix(dailyForecast[0].dt).utc(),
-    firstEntryInSlicedForecast = moment.unix(todaysWeather.dt - 1).utc();
+  const firstEntryInDailyForecast = moment.unix(dailyForecast[0].dt).utc();
+  const firstEntryInSlicedForecast = moment.unix(todaysWeather.dt - 1).utc();
   if (firstEntryInSlicedForecast.date() !== firstEntryInDailyForecast.date()) {
     const modifiedDailyForecast = dailyForecast.concat();
     modifiedDailyForecast.splice(0, 0, todaysWeather);
@@ -100,18 +105,20 @@ function extendedDailyForecastWithTodaysForecastIfNeeded(
   return dailyForecast;
 }
 
-function dailyForecastWithMockObjectsIfNeeded(dailyForecast) {
-  const numberOfDaysNeededInForecast = 7,
-    daysLeftToAdd = numberOfDaysNeededInForecast - dailyForecast.length;
-  if (0 === daysLeftToAdd) {
+function dailyForecastWithMockObjectsIfNeeded(
+  dailyForecast: OpenWeatherMapForecastList,
+) {
+  const numberOfDaysNeededInForecast = 7;
+  const daysLeftToAdd = numberOfDaysNeededInForecast - dailyForecast.length;
+  if (daysLeftToAdd === 0) {
     return dailyForecast;
   }
 
-  const modifiedForecast = dailyForecast.concat(),
-    lastDayInForecast = dailyForecast[dailyForecast.length - 1],
-    secondsInDay = 86400;
+  const modifiedForecast = dailyForecast.concat();
+  const lastDayInForecast = dailyForecast[dailyForecast.length - 1];
+  const secondsInDay = 86400;
   for (let i = 1; i <= daysLeftToAdd; i++) {
-    const clonedForecast = Object.assign({}, lastDayInForecast);
+    const clonedForecast = { ...lastDayInForecast };
     clonedForecast.dt += i * secondsInDay;
     modifiedForecast.push(clonedForecast);
   }
@@ -119,7 +126,7 @@ function dailyForecastWithMockObjectsIfNeeded(dailyForecast) {
   return modifiedForecast;
 }
 
-function adaptedTemperatureValues(forecast) {
+function adaptedTemperatureValues(forecast: OpenWeatherMapForecastListEntry) {
   const temp = forecast.main.temp;
   return {
     metric: convertedTemperatureToCelsius(temp),
@@ -127,15 +134,15 @@ function adaptedTemperatureValues(forecast) {
   };
 }
 
-function convertedTemperatureToCelsius(tempInKelvin) {
+function convertedTemperatureToCelsius(tempInKelvin: number) {
   return Math.round(tempInKelvin - 273.5) + '°C';
 }
-function convertedTemperatureToFahrenheit(tempInKelvin) {
+function convertedTemperatureToFahrenheit(tempInKelvin: number) {
   return Math.round((tempInKelvin * 9) / 5.0 - 459.67) + '°F';
 }
 
-function adaptedCurrentWeather(forecast) {
-  const adaptedWeather = {
+function adaptedCurrentWeather(forecast: OpenWeatherMapForecastListEntry) {
+  const adaptedWeather: DayForecast = {
     temp: adaptedTemperatureValues(forecast),
     date: forecast.dt,
   };
@@ -151,7 +158,7 @@ function adaptedCurrentWeather(forecast) {
   return adaptedWeather;
 }
 
-function capitalizedString(string) {
+function capitalizedString(string: string) {
   let capitalizedString = string;
   capitalizedString =
     capitalizedString.charAt(0).toUpperCase() + capitalizedString.slice(1);
@@ -159,16 +166,18 @@ function capitalizedString(string) {
   return capitalizedString;
 }
 
-const kDaySliceNames = {
+const kDaySliceNames: Record<number, string> = {
   0: 'Night',
   1: 'Evening',
   2: 'Day',
   3: 'Morning',
 };
 
-function adaptedSlicedTodaysForecast(slicedTodaysForecast) {
+function adaptedSlicedTodaysForecast(
+  slicedTodaysForecast: OpenWeatherMapForecastList,
+) {
   return slicedTodaysForecast
-    .reduce((newArray, forecast, index) => {
+    .reduce<SliceForecast[]>((newArray, forecast, index) => {
       newArray.push({
         forecast: {
           temp: adaptedTemperatureValues(forecast),
@@ -181,33 +190,30 @@ function adaptedSlicedTodaysForecast(slicedTodaysForecast) {
     .reverse();
 }
 
-function adaptedDailyForecast(dailyForecast) {
-  const adaptedDailyForecast = [];
+function adaptedDailyForecast(dailyForecast: OpenWeatherMapForecastList) {
+  const adaptedDailyForecast: DayForecast[] = [];
   dailyForecast.forEach((forecast) => {
-    let conditionsIcon = null,
-      conditionsDescription = null;
+    const day: DayForecast = {
+      date: forecast.dt,
+      temp: adaptedTemperatureValues(forecast),
+    };
     if (forecast.weather && forecast.weather.length > 0) {
       const weather = forecast.weather[0];
-      conditionsIcon = adaptedIconClass(weather.icon, true);
-      conditionsDescription = capitalizedString(weather.description);
+      day.conditionsIcon = adaptedIconClass(weather.icon, true);
+      day.conditionsDescription = capitalizedString(weather.description);
     }
-    adaptedDailyForecast.push({
-      temp: adaptedTemperatureValues(forecast),
-      conditionsIcon: conditionsIcon,
-      conditionsDescription: conditionsDescription,
-      date: forecast.dt,
-    });
+    adaptedDailyForecast.push(day);
   });
 
   return adaptedDailyForecast;
 }
 
-function adaptedIconClass(iconCode, isNeutral) {
+function adaptedIconClass(iconCode: string, isNeutral?: boolean) {
   let iconClass = 'wi';
   if (!isNeutral) {
-    if (-1 !== iconCode.search('d')) {
+    if (iconCode.search('d') !== -1) {
       iconClass += '-day';
-    } else if (-1 !== iconCode.search('n')) {
+    } else if (iconCode.search('n') !== -1) {
       iconClass += '-night';
     }
   }
